@@ -30,18 +30,30 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4">
-      <div className="w-full max-w-sm bg-white rounded-2xl shadow-md p-8">
+    <div className="relative min-h-[calc(100vh-56px)] flex items-center justify-center px-4 overflow-hidden">
+      {/* Video background */}
+      <video
+        className="absolute inset-0 w-full h-full object-cover"
+        src="/video-login.mp4"
+        autoPlay
+        loop
+        muted
+        playsInline
+      />
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/55" />
+
+      <div className="relative z-10 w-full max-w-sm bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl p-8">
         <div className="text-center mb-6">
           <div className="text-4xl mb-2">✂️</div>
-          <h1 className="text-2xl font-bold text-gray-800">Ingresar</h1>
-          <p className="text-gray-500 text-sm mt-1">Reservá tu turno</p>
+          <h1 className="text-2xl font-bold text-white">Ingresar</h1>
+          <p className="text-white/70 text-sm mt-1">Reservá tu turno</p>
         </div>
 
         {/* Google */}
         <button
           onClick={() => signIn("google", { callbackUrl: "/" })}
-          className="w-full flex items-center justify-center gap-3 border border-gray-300 rounded-xl py-3 text-sm font-medium hover:bg-gray-50 transition mb-4"
+          className="w-full flex items-center justify-center gap-3 bg-white/90 hover:bg-white border border-white/30 rounded-xl py-3 text-sm font-medium text-gray-700 transition mb-4"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -54,49 +66,51 @@ export default function LoginPage() {
 
         <div className="relative my-4">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200" />
+            <div className="w-full border-t border-white/25" />
           </div>
-          <div className="relative flex justify-center text-xs text-gray-400 bg-white px-2">o</div>
+          <div className="relative flex justify-center text-xs text-white/50 px-2">
+            <span className="bg-transparent">o</span>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
-            <div className="bg-red-50 text-red-600 text-sm rounded-lg px-4 py-2">{error}</div>
+            <div className="bg-red-500/80 text-white text-sm rounded-lg px-4 py-2">{error}</div>
           )}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-white/80 mb-1">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400"
               placeholder="tu@email.com"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+            <label className="block text-sm font-medium text-white/80 mb-1">Contraseña</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400"
               placeholder="••••••••"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-60 text-white font-semibold py-3 rounded-xl transition"
+            className="w-full bg-purple-600 hover:bg-purple-500 disabled:opacity-60 text-white font-semibold py-3 rounded-xl transition shadow-lg"
           >
             {loading ? "Ingresando..." : "Ingresar"}
           </button>
         </form>
 
-        <p className="text-center text-sm text-gray-500 mt-4">
+        <p className="text-center text-sm text-white/60 mt-4">
           ¿No tenés cuenta?{" "}
-          <Link href="/register" className="text-purple-600 font-medium hover:underline">
+          <Link href="/register" className="text-purple-300 font-medium hover:text-white">
             Registrarse
           </Link>
         </p>
