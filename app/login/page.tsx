@@ -1,8 +1,11 @@
 "use client";
 import { signIn } from "next-auth/react";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+
+const ThreeBackground = dynamic(() => import("@/components/ThreeBackground"), { ssr: false });
 
 export default function LoginPage() {
   const router = useRouter();
@@ -10,24 +13,6 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const dirRef = useRef(1);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    let raf: number;
-    const step = () => {
-      video.currentTime += dirRef.current * 0.033;
-      if (video.currentTime >= video.duration - 0.05) dirRef.current = -1;
-      if (video.currentTime <= 0.05) dirRef.current = 1;
-      raf = requestAnimationFrame(step);
-    };
-    const start = () => { raf = requestAnimationFrame(step); };
-    video.addEventListener("loadedmetadata", start);
-    if (video.readyState >= 1) start();
-    return () => { cancelAnimationFrame(raf); video.removeEventListener("loadedmetadata", start); };
-  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -45,18 +30,16 @@ export default function LoginPage() {
 
   return (
     <div className="relative min-h-[calc(100vh-56px)] flex items-center justify-center px-4 overflow-hidden">
-      {/* Video background */}
-      <video
-        ref={videoRef}
-        className="absolute inset-0 w-full h-full object-cover opacity-40"
-        src="/video-login.mp4"
-        muted playsInline
-        preload="auto"
-      />
-      {/* Gradient overlay */}
+      {/* 3D interactive background */}
+      <ThreeBackground />
+
+      {/* Subtle dark vignette overlay */}
       <div
-        className="absolute inset-0"
-        style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.7))" }}
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 80% at 50% 50%, transparent 30%, rgba(5,4,2,0.7) 100%)",
+        }}
       />
 
       <div
