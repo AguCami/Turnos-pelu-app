@@ -36,11 +36,7 @@ export default function LoginPage() {
       {/* Gradient overlay */}
       <div
         className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 60% at 30% 40%, rgba(147,51,234,0.25) 0%, transparent 65%)," +
-            "linear-gradient(to bottom, rgba(10,0,20,0.5), rgba(5,0,16,0.75))",
-        }}
+        style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.7))" }}
       />
 
       <div
@@ -61,7 +57,6 @@ export default function LoginPage() {
         />
 
         <div className="text-center mb-7">
-          <div className="text-4xl mb-3">✂️</div>
           <h1 className="text-2xl font-bold text-white">Ingresar</h1>
           <p className="text-white/45 text-sm mt-1">Reservá tu turno</p>
         </div>
