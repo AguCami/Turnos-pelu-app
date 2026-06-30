@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { db } from "@/db";
+import { db, ensureDB } from "@/db";
 import { turnos, servicios, users } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { getServerSession } from "next-auth";
@@ -7,6 +7,7 @@ import { authOptions } from "@/lib/auth";
 import { randomUUID } from "crypto";
 
 export async function GET(req: Request) {
+  await ensureDB();
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
 
@@ -53,6 +54,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+  await ensureDB();
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
 

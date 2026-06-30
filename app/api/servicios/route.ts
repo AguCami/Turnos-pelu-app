@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { db } from "@/db";
+import { db, ensureDB } from "@/db";
 import { servicios } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { getServerSession } from "next-auth";
@@ -7,6 +7,7 @@ import { authOptions } from "@/lib/auth";
 import { randomUUID } from "crypto";
 
 export async function GET() {
+  await ensureDB();
   const data = await db.select().from(servicios).where(eq(servicios.activo, true));
   return NextResponse.json(data);
 }

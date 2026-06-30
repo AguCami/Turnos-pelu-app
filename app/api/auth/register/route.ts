@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { db } from "@/db";
+import { db, ensureDB } from "@/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { randomUUID } from "crypto";
 
 export async function POST(req: Request) {
+  await ensureDB();
   const { name, email, password } = await req.json();
 
   if (!name || !email || !password) {
