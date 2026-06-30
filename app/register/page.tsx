@@ -2,10 +2,8 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
-  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,43 +12,58 @@ export default function RegisterPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (password.length < 6) {
-      setError("La contraseña debe tener al menos 6 caracteres");
-      return;
-    }
-    setLoading(true);
-    setError("");
-
+    if (password.length < 6) { setError("La contraseña debe tener al menos 6 caracteres"); return; }
+    setLoading(true); setError("");
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password }),
     });
-
     if (!res.ok) {
       const data = await res.json();
       setError(data.error ?? "Error al registrarse");
-      setLoading(false);
-      return;
+      setLoading(false); return;
     }
-
     await signIn("credentials", { email, password, callbackUrl: "/" });
   }
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4">
-      <div className="w-full max-w-sm bg-white rounded-2xl shadow-md p-8">
-        <div className="text-center mb-6">
-          <div className="text-4xl mb-2">✂️</div>
-          <h1 className="text-2xl font-bold text-gray-800">Crear cuenta</h1>
-          <p className="text-gray-500 text-sm mt-1">Empezá a reservar turnos</p>
+    <div className="min-h-[calc(100vh-56px)] flex items-center justify-center px-4 py-8">
+      {/* Background glow */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div
+          className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full blur-3xl opacity-20"
+          style={{ background: "radial-gradient(circle, rgba(147,51,234,1), transparent 70%)" }}
+        />
+      </div>
+
+      <div
+        className="relative z-10 w-full max-w-sm rounded-3xl p-8"
+        style={{
+          background: "rgba(255,255,255,0.06)",
+          backdropFilter: "blur(40px) saturate(200%)",
+          WebkitBackdropFilter: "blur(40px) saturate(200%)",
+          border: "1px solid rgba(255,255,255,0.15)",
+          boxShadow:
+            "inset 0 1.5px 0 rgba(255,255,255,0.2), 0 24px 64px rgba(0,0,0,0.5)",
+        }}
+      >
+        <div
+          className="absolute top-0 left-6 right-6 h-px"
+          style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)" }}
+        />
+
+        <div className="text-center mb-7">
+          <div className="text-4xl mb-3">✂️</div>
+          <h1 className="text-2xl font-bold text-white">Crear cuenta</h1>
+          <p className="text-white/45 text-sm mt-1">Empezá a reservar turnos</p>
         </div>
 
         <button
           onClick={() => signIn("google", { callbackUrl: "/" })}
-          className="w-full flex items-center justify-center gap-3 border border-gray-300 rounded-xl py-3 text-sm font-medium hover:bg-gray-50 transition mb-4"
+          className="btn-glass w-full flex items-center justify-center gap-3 rounded-2xl py-3 text-sm font-medium text-white mb-4"
         >
-          <svg className="w-5 h-5" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -59,60 +72,42 @@ export default function RegisterPage() {
           Continuar con Google
         </button>
 
-        <div className="relative my-4">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200" />
-          </div>
-          <div className="relative flex justify-center text-xs text-gray-400 bg-white px-2">o con email</div>
+        <div className="flex items-center gap-3 my-4">
+          <div className="flex-1 h-px bg-white/15" />
+          <span className="text-xs text-white/35">o con email</span>
+          <div className="flex-1 h-px bg-white/15" />
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {error && <div className="bg-red-50 text-red-600 text-sm rounded-lg px-4 py-2">{error}</div>}
+          {error && (
+            <div className="text-sm rounded-xl px-4 py-2.5 text-white/90" style={{ background: "rgba(239,68,68,0.25)", border: "1px solid rgba(239,68,68,0.3)" }}>
+              {error}
+            </div>
+          )}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-              placeholder="Juan Pérez"
-            />
+            <label className="block text-xs font-medium text-white/55 mb-1.5 uppercase tracking-wide">Nombre completo</label>
+            <input type="text" value={name} onChange={(e) => setName(e.target.value)} required
+              className="input-glass w-full rounded-xl px-4 py-2.5 text-sm" placeholder="Juan Pérez" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-              placeholder="tu@email.com"
-            />
+            <label className="block text-xs font-medium text-white/55 mb-1.5 uppercase tracking-wide">Email</label>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
+              className="input-glass w-full rounded-xl px-4 py-2.5 text-sm" placeholder="tu@email.com" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-              placeholder="Mínimo 6 caracteres"
-            />
+            <label className="block text-xs font-medium text-white/55 mb-1.5 uppercase tracking-wide">Contraseña</label>
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required
+              className="input-glass w-full rounded-xl px-4 py-2.5 text-sm" placeholder="Mínimo 6 caracteres" />
           </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-60 text-white font-semibold py-3 rounded-xl transition"
-          >
+          <button type="submit" disabled={loading}
+            className="btn-primary w-full font-semibold py-3 rounded-2xl text-white">
             {loading ? "Creando cuenta..." : "Crear cuenta"}
           </button>
         </form>
 
-        <p className="text-center text-sm text-gray-500 mt-4">
+        <p className="text-center text-xs text-white/40 mt-5">
           ¿Ya tenés cuenta?{" "}
-          <Link href="/login" className="text-purple-600 font-medium hover:underline">
+          <Link href="/login" className="text-purple-300 font-medium hover:text-white transition">
             Ingresar
           </Link>
         </p>

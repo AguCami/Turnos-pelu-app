@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-type Servicio = { id: string; nombre: string; descripcion?: string; duracion: number; precio: number; activo: boolean };
+type Servicio = { id: string; nombre: string; descripcion?: string; duracion: number; precio: number };
 
 export default function AdminServicios() {
   const { data: session, status } = useSession();
@@ -28,8 +28,7 @@ export default function AdminServicios() {
     e.preventDefault();
     setSaving(true);
     const res = await fetch("/api/servicios", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ nombre, descripcion, duracion: parseInt(duracion), precio: parseFloat(precio) }),
     });
     const nuevo = await res.json();
@@ -39,71 +38,79 @@ export default function AdminServicios() {
     setSaving(false);
   }
 
-  if (status === "loading") return <div className="flex justify-center py-20 text-gray-400">Cargando...</div>;
+  if (status === "loading") return (
+    <div className="flex justify-center items-center py-32">
+      <div className="w-8 h-8 border-2 border-purple-500/40 border-t-purple-400 rounded-full animate-spin" />
+    </div>
+  );
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Servicios</h1>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-2xl font-bold bg-gradient-to-br from-white to-white/60 bg-clip-text text-transparent">
+          Servicios
+        </h1>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold px-4 py-2 rounded-xl"
+          className={showForm ? "btn-glass px-5 py-2 rounded-2xl text-white/70 text-sm font-medium" : "btn-primary px-5 py-2 rounded-2xl text-white text-sm font-semibold"}
         >
           {showForm ? "Cancelar" : "+ Agregar"}
         </button>
       </div>
 
       {showForm && (
-        <form onSubmit={handleSave} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 mb-6 space-y-4">
-          <h2 className="font-semibold text-gray-700">Nuevo servicio</h2>
+        <form onSubmit={handleSave} className="rounded-2xl p-5 mb-6 space-y-4" style={{
+          background: "rgba(255,255,255,0.06)",
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
+          border: "1px solid rgba(255,255,255,0.15)",
+          boxShadow: "inset 0 1.5px 0 rgba(255,255,255,0.18), 0 8px 32px rgba(0,0,0,0.3)",
+        }}>
+          <p className="font-semibold text-white/70 text-sm">Nuevo servicio</p>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
-            <input
-              value={nombre} onChange={(e) => setNombre(e.target.value)} required
-              className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
+            <label className="block text-xs font-medium text-white/45 mb-1.5 uppercase tracking-wide">Nombre</label>
+            <input value={nombre} onChange={(e) => setNombre(e.target.value)} required
+              className="input-glass w-full rounded-xl px-4 py-2.5 text-sm" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Descripción (opcional)</label>
-            <input
-              value={descripcion} onChange={(e) => setDescripcion(e.target.value)}
-              className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
+            <label className="block text-xs font-medium text-white/45 mb-1.5 uppercase tracking-wide">Descripción (opcional)</label>
+            <input value={descripcion} onChange={(e) => setDescripcion(e.target.value)}
+              className="input-glass w-full rounded-xl px-4 py-2.5 text-sm" />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Duración (min)</label>
-              <input
-                type="number" value={duracion} onChange={(e) => setDuracion(e.target.value)} required min="10"
-                className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
+              <label className="block text-xs font-medium text-white/45 mb-1.5 uppercase tracking-wide">Duración (min)</label>
+              <input type="number" value={duracion} onChange={(e) => setDuracion(e.target.value)} required min="10"
+                className="input-glass w-full rounded-xl px-4 py-2.5 text-sm" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Precio ($)</label>
-              <input
-                type="number" value={precio} onChange={(e) => setPrecio(e.target.value)} required min="0"
-                className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
+              <label className="block text-xs font-medium text-white/45 mb-1.5 uppercase tracking-wide">Precio ($)</label>
+              <input type="number" value={precio} onChange={(e) => setPrecio(e.target.value)} required min="0"
+                className="input-glass w-full rounded-xl px-4 py-2.5 text-sm" />
             </div>
           </div>
-          <button
-            type="submit" disabled={saving}
-            className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl"
-          >
+          <button type="submit" disabled={saving}
+            className="btn-primary w-full py-3 rounded-2xl text-white font-semibold">
             {saving ? "Guardando..." : "Guardar servicio"}
           </button>
         </form>
       )}
 
-      <div className="space-y-3">
+      <div className="space-y-2">
         {servicios.map((s) => (
-          <div key={s.id} className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex justify-between items-center">
+          <div key={s.id} className="rounded-2xl p-4 flex justify-between items-center" style={{
+            background: "rgba(255,255,255,0.05)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+            border: "1px solid rgba(255,255,255,0.09)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1)",
+          }}>
             <div>
-              <p className="font-semibold text-gray-800">{s.nombre}</p>
-              {s.descripcion && <p className="text-gray-400 text-xs mt-0.5">{s.descripcion}</p>}
-              <p className="text-gray-500 text-sm mt-0.5">{s.duracion} min</p>
+              <p className="font-semibold text-white">{s.nombre}</p>
+              {s.descripcion && <p className="text-white/35 text-xs mt-0.5">{s.descripcion}</p>}
+              <p className="text-white/30 text-xs mt-0.5">{s.duracion} min</p>
             </div>
-            <p className="font-bold text-purple-700 text-lg">${s.precio.toLocaleString()}</p>
+            <p className="font-bold text-purple-300 text-lg">${s.precio.toLocaleString()}</p>
           </div>
         ))}
       </div>
