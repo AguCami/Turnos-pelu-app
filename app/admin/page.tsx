@@ -53,12 +53,12 @@ export default function AdminPage() {
   const stats = [
     { label: "Pendientes", value: turnos.filter((t) => t.estado === "pendiente").length, color: "rgba(234,179,8,0.8)" },
     { label: "Confirmados", value: turnos.filter((t) => t.estado === "confirmado" && t.fecha >= hoy).length, color: "rgba(34,197,94,0.8)" },
-    { label: "Hoy", value: turnos.filter((t) => t.fecha === hoy && t.estado !== "cancelado").length, color: "rgba(167,99,255,0.9)" },
+    { label: "Hoy", value: turnos.filter((t) => t.fecha === hoy && t.estado !== "cancelado").length, color: "rgba(201,162,39,0.9)" },
   ];
 
   if (status === "loading" || loading) return (
     <div className="flex justify-center items-center py-32">
-      <div className="w-8 h-8 border-2 border-purple-500/40 border-t-purple-400 rounded-full animate-spin" />
+      <div className="w-8 h-8 border-2 border-yellow-600/40 border-t-yellow-400 rounded-full animate-spin" />
     </div>
   );
 
@@ -68,7 +68,7 @@ export default function AdminPage() {
         <h1 className="text-2xl font-bold bg-gradient-to-br from-white to-white/60 bg-clip-text text-transparent">
           Panel Admin
         </h1>
-        <Link href="/admin/servicios" className="text-purple-400/80 text-sm hover:text-purple-300 transition">
+        <Link href="/admin/servicios" className="text-gold/80 text-sm hover:text-white transition">
           Servicios →
         </Link>
       </div>
@@ -101,7 +101,7 @@ export default function AdminPage() {
             className="px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all"
             style={
               filtro === f.key
-                ? { background: "linear-gradient(135deg, rgba(147,51,234,0.7), rgba(109,40,217,0.8))", border: "1px solid rgba(167,99,255,0.4)", color: "white" }
+                ? { background: "linear-gradient(135deg, rgba(201,162,39,0.7), rgba(160,124,16,0.8))", border: "1px solid rgba(201,162,39,0.5)", color: "white" }
                 : { background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }
             }
           >
@@ -140,7 +140,7 @@ export default function AdminPage() {
                     {t.notas && <p className="text-white/25 text-xs mt-1">📝 {t.notas}</p>}
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-purple-300">${t.precio.toLocaleString()}</p>
+                    <p className="font-bold text-gold-light">${t.precio.toLocaleString()}</p>
                     <span className="text-xs font-medium px-2.5 py-0.5 rounded-full mt-1.5 inline-block" style={badge.style}>
                       {badge.label}
                     </span>

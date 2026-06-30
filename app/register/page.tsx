@@ -33,7 +33,7 @@ export default function RegisterPage() {
       <div className="fixed inset-0 pointer-events-none">
         <div
           className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full blur-3xl opacity-20"
-          style={{ background: "radial-gradient(circle, rgba(147,51,234,1), transparent 70%)" }}
+          style={{ background: "radial-gradient(circle, rgba(201,162,39,0.35), transparent 70%)" }}
         />
       </div>
 
@@ -54,7 +54,6 @@ export default function RegisterPage() {
         />
 
         <div className="text-center mb-7">
-          <div className="text-4xl mb-3">✂️</div>
           <h1 className="text-2xl font-bold text-white">Crear cuenta</h1>
           <p className="text-white/45 text-sm mt-1">Empezá a reservar turnos</p>
         </div>
@@ -107,7 +106,7 @@ export default function RegisterPage() {
 
         <p className="text-center text-xs text-white/40 mt-5">
           ¿Ya tenés cuenta?{" "}
-          <Link href="/login" className="text-purple-300 font-medium hover:text-white transition">
+          <Link href="/login" className="text-gold font-medium hover:text-white transition">
             Ingresar
           </Link>
         </p>

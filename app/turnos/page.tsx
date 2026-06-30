@@ -52,7 +52,7 @@ export default function MisTurnos() {
   if (status === "loading" || loading) {
     return (
       <div className="flex justify-center items-center py-32 text-white/30">
-        <div className="w-8 h-8 border-2 border-purple-500/40 border-t-purple-400 rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-yellow-600/40 border-t-yellow-400 rounded-full animate-spin" />
       </div>
     );
   }
@@ -81,7 +81,7 @@ export default function MisTurnos() {
         >
           <div className="text-5xl mb-4">📅</div>
           <p className="text-white/40 text-base">No tenés turnos activos</p>
-          <Link href="/turnos/nuevo" className="text-purple-400 text-sm font-medium hover:text-purple-300 mt-3 inline-block transition">
+          <Link href="/turnos/nuevo" className="text-gold text-sm font-medium hover:text-white mt-3 inline-block transition">
             Reservar ahora →
           </Link>
         </div>
@@ -127,7 +127,7 @@ function TurnoCard({ turno, onCancelar }: { turno: Turno; onCancelar?: (id: stri
           {turno.notas && <p className="text-white/30 text-xs mt-1">{turno.notas}</p>}
         </div>
         <div className="text-right">
-          <p className="font-bold text-purple-300 text-lg">${turno.precio.toLocaleString()}</p>
+          <p className="font-bold text-gold-light text-lg">${turno.precio.toLocaleString()}</p>
           <span className="text-xs font-medium px-2.5 py-0.5 rounded-full mt-1.5 inline-block" style={badge.style}>
             {badge.label}
           </span>

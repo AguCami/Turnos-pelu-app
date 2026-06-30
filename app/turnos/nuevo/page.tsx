@@ -66,7 +66,7 @@ export default function NuevoTurno() {
 
   if (status === "loading") return (
     <div className="flex justify-center items-center py-32">
-      <div className="w-8 h-8 border-2 border-purple-500/40 border-t-purple-400 rounded-full animate-spin" />
+      <div className="w-8 h-8 border-2 border-yellow-600/40 border-t-yellow-400 rounded-full animate-spin" />
     </div>
   );
 
@@ -81,7 +81,7 @@ export default function NuevoTurno() {
         {[1, 2, 3].map((s) => (
           <div key={s} className="flex-1 h-1 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.1)" }}>
             {step >= s && (
-              <div className="h-full rounded-full" style={{ background: "linear-gradient(90deg, #9333ea, #7c3aed)" }} />
+              <div className="h-full rounded-full" style={{ background: "linear-gradient(90deg, #C9A227, #A07C10)" }} />
             )}
           </div>
         ))}
@@ -100,9 +100,9 @@ export default function NuevoTurno() {
                 style={{
                   ...(servicioId === s.id
                     ? {
-                        background: "rgba(147,51,234,0.2)",
-                        border: "1px solid rgba(147,51,234,0.5)",
-                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1), 0 0 20px rgba(147,51,234,0.2)",
+                        background: "rgba(201,162,39,0.15)",
+                        border: "1px solid rgba(201,162,39,0.5)",
+                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1), 0 0 20px rgba(201,162,39,0.2)",
                       }
                     : {
                         background: "rgba(255,255,255,0.05)",
@@ -115,7 +115,7 @@ export default function NuevoTurno() {
                     <p className="font-semibold text-white">{s.nombre}</p>
                     <p className="text-white/35 text-xs mt-0.5">{s.duracion} min</p>
                   </div>
-                  <p className="font-bold text-purple-300 text-lg">${s.precio.toLocaleString()}</p>
+                  <p className="font-bold text-gold-light text-lg">${s.precio.toLocaleString()}</p>
                 </div>
               </button>
             ))}
@@ -153,10 +153,10 @@ export default function NuevoTurno() {
                       style={
                         hora === h
                           ? {
-                              background: "linear-gradient(135deg, rgba(147,51,234,0.8), rgba(109,40,217,0.9))",
-                              border: "1px solid rgba(167,99,255,0.5)",
+                              background: "linear-gradient(135deg, rgba(201,162,39,0.85), rgba(160,124,16,0.95))",
+                              border: "1px solid rgba(201,162,39,0.6)",
                               color: "white",
-                              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.2), 0 4px 12px rgba(147,51,234,0.35)",
+                              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.2), 0 4px 12px rgba(201,162,39,0.35)",
                             }
                           : {
                               background: "rgba(255,255,255,0.06)",
@@ -212,7 +212,7 @@ export default function NuevoTurno() {
             ))}
             <div className="flex justify-between border-t border-white/10 pt-3 mt-1">
               <span className="text-white/40 text-sm">Total</span>
-              <span className="font-bold text-purple-300 text-xl">${servicio.precio.toLocaleString()}</span>
+              <span className="font-bold text-gold-light text-xl">${servicio.precio.toLocaleString()}</span>
             </div>
           </div>
 

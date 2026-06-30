@@ -20,18 +20,12 @@ export default async function Home() {
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div
             className="w-72 h-72 rounded-full blur-3xl opacity-30"
-            style={{ background: "radial-gradient(circle, rgba(147,51,234,0.8) 0%, transparent 70%)" }}
+            style={{ background: "radial-gradient(circle, rgba(201,162,39,0.4) 0%, transparent 70%)" }}
           />
         </div>
 
         <div className="relative">
-          <div
-            className="inline-flex items-center justify-center w-20 h-20 rounded-3xl text-4xl mb-6 glass"
-            style={{ borderRadius: "1.5rem" }}
-          >
-            ✂️
-          </div>
-          <h1 className="text-5xl font-bold mb-3 bg-gradient-to-br from-white via-white to-purple-300 bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold mb-3 bg-gradient-to-br from-white via-white to-yellow-300 bg-clip-text text-transparent">
             Peluquería
           </h1>
           <p className="text-white/50 text-lg mb-8">Reservá tu turno online, fácil y rápido</p>
@@ -49,7 +43,7 @@ export default async function Home() {
         <h2 className="text-xl font-semibold text-white/80 mb-4 px-1">Nuestros servicios</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {serviciosActivos.map((s) => (
-            <div key={s.id} className="glass-card p-5 group hover:border-purple-500/30 transition-all duration-300">
+            <div key={s.id} className="glass-card p-5 group hover:border-yellow-500/30 transition-all duration-300">
               <div className="flex justify-between items-start">
                 <div>
                   <h3 className="font-semibold text-white text-base">{s.nombre}</h3>
@@ -57,7 +51,7 @@ export default async function Home() {
                   <p className="text-white/30 text-xs mt-2">{s.duracion} min</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-purple-300 text-xl">${s.precio.toLocaleString()}</p>
+                  <p className="font-bold text-gold-light text-xl">${s.precio.toLocaleString()}</p>
                 </div>
               </div>
             </div>

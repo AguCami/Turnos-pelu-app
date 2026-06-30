@@ -1,6 +1,6 @@
 "use client";
 import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -10,6 +10,24 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const dirRef = useRef(1);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    let raf: number;
+    const step = () => {
+      video.currentTime += dirRef.current * 0.033;
+      if (video.currentTime >= video.duration - 0.05) dirRef.current = -1;
+      if (video.currentTime <= 0.05) dirRef.current = 1;
+      raf = requestAnimationFrame(step);
+    };
+    const start = () => { raf = requestAnimationFrame(step); };
+    video.addEventListener("loadedmetadata", start);
+    if (video.readyState >= 1) start();
+    return () => { cancelAnimationFrame(raf); video.removeEventListener("loadedmetadata", start); };
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -29,9 +47,11 @@ export default function LoginPage() {
     <div className="relative min-h-[calc(100vh-56px)] flex items-center justify-center px-4 overflow-hidden">
       {/* Video background */}
       <video
+        ref={videoRef}
         className="absolute inset-0 w-full h-full object-cover opacity-40"
         src="/video-login.mp4"
-        autoPlay loop muted playsInline
+        muted playsInline
+        preload="auto"
       />
       {/* Gradient overlay */}
       <div
@@ -116,7 +136,7 @@ export default function LoginPage() {
 
         <p className="text-center text-xs text-white/40 mt-5">
           ¿No tenés cuenta?{" "}
-          <Link href="/register" className="text-purple-300 font-medium hover:text-white transition">
+          <Link href="/register" className="text-gold font-medium hover:text-white transition">
             Registrarse
           </Link>
         </p>

@@ -11,7 +11,7 @@ export default function Navbar() {
     <nav
       className="sticky top-0 z-50"
       style={{
-        background: "rgba(10, 0, 20, 0.55)",
+        background: "rgba(8, 8, 4, 0.75)",
         backdropFilter: "blur(28px) saturate(180%)",
         WebkitBackdropFilter: "blur(28px) saturate(180%)",
         borderBottom: "1px solid rgba(255,255,255,0.1)",
@@ -20,10 +20,7 @@ export default function Navbar() {
     >
       <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-bold text-lg text-white">
-          <span className="text-2xl">✂️</span>
-          <span className="bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
-            Peluquería
-          </span>
+          <span className="font-bold text-gold-light tracking-wide">Peluquería</span>
         </Link>
 
         {/* Desktop */}
@@ -67,7 +64,7 @@ export default function Navbar() {
         <div
           className="sm:hidden px-4 pb-4 pt-2 space-y-1"
           style={{
-            background: "rgba(10,0,20,0.7)",
+            background: "rgba(8,8,4,0.85)",
             backdropFilter: "blur(20px)",
             borderTop: "1px solid rgba(255,255,255,0.08)",
           }}
@@ -88,7 +85,7 @@ export default function Navbar() {
               Cerrar sesión · {session.user.name}
             </button>
           ) : (
-            <Link href="/login" className="block px-4 py-2.5 rounded-xl text-purple-300 font-medium" onClick={() => setMenuOpen(false)}>
+            <Link href="/login" className="block px-4 py-2.5 rounded-xl text-gold font-medium" onClick={() => setMenuOpen(false)}>
               Ingresar
             </Link>
           )}

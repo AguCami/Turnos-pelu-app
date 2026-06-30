@@ -40,7 +40,7 @@ export default function AdminServicios() {
 
   if (status === "loading") return (
     <div className="flex justify-center items-center py-32">
-      <div className="w-8 h-8 border-2 border-purple-500/40 border-t-purple-400 rounded-full animate-spin" />
+      <div className="w-8 h-8 border-2 border-yellow-600/40 border-t-yellow-400 rounded-full animate-spin" />
     </div>
   );
 
@@ -110,7 +110,7 @@ export default function AdminServicios() {
               {s.descripcion && <p className="text-white/35 text-xs mt-0.5">{s.descripcion}</p>}
               <p className="text-white/30 text-xs mt-0.5">{s.duracion} min</p>
             </div>
-            <p className="font-bold text-purple-300 text-lg">${s.precio.toLocaleString()}</p>
+            <p className="font-bold text-gold-light text-lg">${s.precio.toLocaleString()}</p>
           </div>
         ))}
       </div>
