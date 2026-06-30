@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 
-const ThreeBackground = dynamic(() => import("@/components/ThreeBackground"), { ssr: false });
+const FluidBackground = dynamic(() => import("@/components/FluidBackground"), { ssr: false });
 
 export default function LoginPage() {
   const router = useRouter();
@@ -30,8 +30,8 @@ export default function LoginPage() {
 
   return (
     <div className="relative min-h-[calc(100vh-56px)] flex items-center justify-center px-4 overflow-hidden">
-      {/* 3D interactive background */}
-      <ThreeBackground />
+      {/* Fluid animated background */}
+      <FluidBackground />
 
       {/* Subtle dark vignette overlay */}
       <div
