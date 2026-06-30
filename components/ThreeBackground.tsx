@@ -9,117 +9,137 @@ export default function ThreeBackground() {
     const mount = mountRef.current;
     if (!mount) return;
 
-    const w = mount.clientWidth;
-    const h = mount.clientHeight;
-
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 100);
-    camera.position.z = 6;
+    const camera = new THREE.PerspectiveCamera(50, mount.clientWidth / mount.clientHeight, 0.1, 100);
+    camera.position.z = 7;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(w, h);
+    renderer.setSize(mount.clientWidth, mount.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.4;
     mount.appendChild(renderer.domElement);
 
-    // Main sphere — polished gold metal
-    const sphereGeo = new THREE.SphereGeometry(1.6, 128, 128);
-    const sphereMat = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color("#1a1400"),
+    // Gold material
+    const goldMat = new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color("#C9A227"),
       metalness: 1.0,
-      roughness: 0.05,
-      envMapIntensity: 1.5,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.05,
+      roughness: 0.12,
+      clearcoat: 0.8,
+      clearcoatRoughness: 0.1,
       reflectivity: 1,
     });
-    const sphere = new THREE.Mesh(sphereGeo, sphereMat);
-    scene.add(sphere);
-
-    // Thin gold ring around the sphere
-    const ringGeo = new THREE.TorusGeometry(2.1, 0.025, 16, 120);
-    const ringMat = new THREE.MeshStandardMaterial({
-      color: new THREE.Color("#C9A227"),
-      metalness: 1,
-      roughness: 0.1,
-      emissive: new THREE.Color("#7a5a00"),
-      emissiveIntensity: 0.5,
+    const darkGoldMat = new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color("#8a6a10"),
+      metalness: 1.0,
+      roughness: 0.2,
+      clearcoat: 0.5,
     });
-    const ring = new THREE.Mesh(ringGeo, ringMat);
-    ring.rotation.x = Math.PI / 2.8;
-    scene.add(ring);
 
-    // Second thinner ring, tilted differently
-    const ring2 = new THREE.Mesh(
-      new THREE.TorusGeometry(2.4, 0.012, 16, 120),
-      new THREE.MeshStandardMaterial({
-        color: new THREE.Color("#D4AF37"),
-        metalness: 1,
-        roughness: 0.2,
-        transparent: true,
-        opacity: 0.55,
-      })
-    );
-    ring2.rotation.x = Math.PI / 5;
-    ring2.rotation.y = Math.PI / 4;
-    scene.add(ring2);
+    // Build one scissor half: blade + finger ring
+    function buildHalf() {
+      const group = new THREE.Group();
 
-    // Gold specular highlight blob (fake specular)
-    const blobGeo = new THREE.SphereGeometry(0.55, 32, 32);
-    const blobMat = new THREE.MeshBasicMaterial({
-      color: new THREE.Color("#FFE566"),
-      transparent: true,
-      opacity: 0.18,
-    });
-    const blob = new THREE.Mesh(blobGeo, blobMat);
-    blob.position.set(0.6, 0.7, 1.3);
-    scene.add(blob);
+      // Blade — tapered box, wide at pivot, thin at tip
+      const bladeShape = new THREE.Shape();
+      bladeShape.moveTo(-0.12, 0);
+      bladeShape.lineTo(0.18, 0);
+      bladeShape.lineTo(0.06, 2.8);
+      bladeShape.lineTo(-0.02, 2.8);
+      bladeShape.closePath();
 
-    // Floating dust particles
-    const particleCount = 200;
-    const pPositions = new Float32Array(particleCount * 3);
-    for (let i = 0; i < particleCount * 3; i++) {
-      pPositions[i] = (Math.random() - 0.5) * 20;
+      const extrudeSettings = {
+        depth: 0.06,
+        bevelEnabled: true,
+        bevelThickness: 0.025,
+        bevelSize: 0.025,
+        bevelSegments: 4,
+      };
+      const bladeGeo = new THREE.ExtrudeGeometry(bladeShape, extrudeSettings);
+      bladeGeo.center();
+      const blade = new THREE.Mesh(bladeGeo, goldMat);
+      blade.position.y = 1.4; // shift up so pivot is at origin
+      group.add(blade);
+
+      // Sharpened edge (thin dark strip along blade)
+      const edgeGeo = new THREE.BoxGeometry(0.015, 2.6, 0.015);
+      const edge = new THREE.Mesh(edgeGeo, darkGoldMat);
+      edge.position.set(0.09, 1.5, 0);
+      group.add(edge);
+
+      // Finger ring — torus
+      const ringGeo = new THREE.TorusGeometry(0.38, 0.07, 20, 64);
+      const ring = new THREE.Mesh(ringGeo, goldMat);
+      ring.position.y = -0.6;
+      group.add(ring);
+
+      // Ring inner detail
+      const innerRingGeo = new THREE.TorusGeometry(0.24, 0.025, 12, 48);
+      const innerRing = new THREE.Mesh(innerRingGeo, darkGoldMat);
+      innerRing.position.y = -0.6;
+      group.add(innerRing);
+
+      return group;
     }
+
+    // Pivot screw
+    const pivotGeo = new THREE.CylinderGeometry(0.1, 0.1, 0.18, 32);
+    const pivot = new THREE.Mesh(pivotGeo, darkGoldMat);
+    pivot.rotation.x = Math.PI / 2;
+
+    // Scissor group
+    const scissors = new THREE.Group();
+
+    const halfA = buildHalf();
+    halfA.rotation.z = 0.28; // open angle
+    halfA.position.z = 0.04;
+
+    const halfB = buildHalf();
+    halfB.rotation.z = -0.28;
+    halfB.position.z = -0.04;
+    halfB.scale.x = -1; // mirror
+
+    scissors.add(halfA);
+    scissors.add(halfB);
+    scissors.add(pivot);
+
+    // Tilt scissors for a natural 3D look
+    scissors.rotation.z = Math.PI / 5;
+    scissors.rotation.x = 0.2;
+
+    scene.add(scissors);
+
+    // Floating particles
+    const pCount = 180;
+    const pPos = new Float32Array(pCount * 3);
+    for (let i = 0; i < pCount * 3; i++) pPos[i] = (Math.random() - 0.5) * 18;
     const pGeo = new THREE.BufferGeometry();
-    pGeo.setAttribute("position", new THREE.BufferAttribute(pPositions, 3));
-    const pMat = new THREE.PointsMaterial({
-      color: "#C9A227",
-      size: 0.03,
-      transparent: true,
-      opacity: 0.4,
-    });
-    const particles = new THREE.Points(pGeo, pMat);
-    scene.add(particles);
+    pGeo.setAttribute("position", new THREE.BufferAttribute(pPos, 3));
+    const pMat = new THREE.PointsMaterial({ color: "#C9A227", size: 0.04, transparent: true, opacity: 0.5 });
+    scene.add(new THREE.Points(pGeo, pMat));
 
-    // Lights — Apple-style: one strong key, one rim
-    const ambientLight = new THREE.AmbientLight("#ffffff", 0.15);
-    scene.add(ambientLight);
+    // Lights — cinematic
+    scene.add(new THREE.AmbientLight("#ffffff", 0.2));
 
-    const keyLight = new THREE.DirectionalLight("#FFE5A0", 6);
-    keyLight.position.set(4, 6, 5);
-    scene.add(keyLight);
+    const key = new THREE.DirectionalLight("#FFE5A0", 8);
+    key.position.set(5, 8, 6);
+    scene.add(key);
 
-    const rimLight = new THREE.DirectionalLight("#C9A227", 3);
-    rimLight.position.set(-5, -3, -2);
-    scene.add(rimLight);
+    const rim = new THREE.DirectionalLight("#C9A227", 4);
+    rim.position.set(-6, -4, -3);
+    scene.add(rim);
 
-    const fillLight = new THREE.PointLight("#ffffff", 1.5, 20);
-    fillLight.position.set(0, 0, 8);
-    scene.add(fillLight);
+    const fill = new THREE.PointLight("#ffffff", 2, 20);
+    fill.position.set(0, 0, 8);
+    scene.add(fill);
 
-    const goldGlow = new THREE.PointLight("#C9A227", 8, 8);
-    goldGlow.position.set(2, 2, 3);
+    const goldGlow = new THREE.PointLight("#D4AF37", 10, 10);
+    goldGlow.position.set(2, 3, 3);
     scene.add(goldGlow);
 
     // Mouse
-    let targetX = 0;
-    let targetY = 0;
-    let curX = 0;
-    let curY = 0;
-
+    let targetX = 0, targetY = 0, curX = 0, curY = 0;
     const onMove = (e: MouseEvent) => {
       targetX = (e.clientX / window.innerWidth - 0.5) * 2;
       targetY = -(e.clientY / window.innerHeight - 0.5) * 2;
@@ -136,40 +156,25 @@ export default function ThreeBackground() {
 
     let id: number;
     const clock = new THREE.Clock();
-
     const animate = () => {
       id = requestAnimationFrame(animate);
       const t = clock.getElapsedTime();
 
-      // Silky smooth mouse follow (Apple-like inertia)
-      curX += (targetX - curX) * 0.025;
-      curY += (targetY - curY) * 0.025;
+      curX += (targetX - curX) * 0.03;
+      curY += (targetY - curY) * 0.03;
 
-      // Sphere: gentle auto-rotation + mouse tilt
-      sphere.rotation.y = t * 0.08 + curX * 0.6;
-      sphere.rotation.x = curY * 0.4;
-
-      // Rings orbit slowly
-      ring.rotation.z = t * 0.05;
-      ring2.rotation.z = -t * 0.04;
-      ring2.rotation.x = Math.PI / 5 + curY * 0.3;
-
-      // Specular blob follows mouse direction
-      blob.position.x = 0.6 + curX * 0.4;
-      blob.position.y = 0.7 + curY * 0.4;
-
-      // Key light follows mouse
-      keyLight.position.x = 4 + curX * 3;
-      keyLight.position.y = 6 + curY * 3;
-      goldGlow.position.x = 2 + curX * 2;
-      goldGlow.position.y = 2 + curY * 2;
+      // Rotate scissors with mouse + gentle auto-spin
+      scissors.rotation.y = curX * 1.0 + t * 0.12;
+      scissors.rotation.x = 0.2 + curY * 0.5;
 
       // Subtle float
-      sphere.position.y = Math.sin(t * 0.4) * 0.08;
-      ring.position.y = Math.sin(t * 0.4) * 0.08;
-      ring2.position.y = Math.sin(t * 0.4 + 0.3) * 0.06;
+      scissors.position.y = Math.sin(t * 0.5) * 0.12;
 
-      particles.rotation.y = t * 0.02;
+      // Light follows mouse
+      goldGlow.position.x = 2 + curX * 3;
+      goldGlow.position.y = 3 + curY * 3;
+      key.position.x = 5 + curX * 2;
+      key.position.y = 8 + curY * 2;
 
       renderer.render(scene, camera);
     };
